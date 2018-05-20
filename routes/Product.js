@@ -1,12 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var Members=require('../models/member');
+var Product=require('../models/products');
 
 router.get('/:id?',function(req,res,next){
 
     if(req.params.id){
-
-        Members.getMemberById(req.params.id,function(err,rows){
+        Product.getProductById(req.params.id,function(err, rows){
 
             if(err)
             {
@@ -20,7 +19,7 @@ router.get('/:id?',function(req,res,next){
     }
     else{
 
-        Members.getAllMember(function(err,rows){
+        Product.getAllProduct(function(err, rows){
 
             if(err)
             {
@@ -35,7 +34,7 @@ router.get('/:id?',function(req,res,next){
 });
 router.post('/add/',function(req,res,next){
 
-    Members.addMember(req.body,function(err,count){
+    Product.addProduct(req.body,function(err, count){
 
         if(err)
         {
@@ -47,24 +46,41 @@ router.post('/add/',function(req,res,next){
     });
 });
 
-router.delete('/delete/:id',function(req,res,next){
+router.delete('/delete/:id?',function(req,res,next){
 
-    Members.deleteMember(req.params.id,function(err,count){
+    if(req.params.id){
+        Product.deleteProduct(req.params.id,function(err, count){
 
-        if(err)
-        {
-            res.send(JSON.stringify({"status": 500, "error": err, "message": "Cannot delete data"}));
-        }
-        else
-        {
-            res.send(JSON.stringify({"status": 200, "error": null, "message": "Data deleted"}));
-        }
+            if(err)
+            {
+                res.send(JSON.stringify({"status": 500, "error": err, "message": "Cannot delete data"}));
+            }
+            else
+            {
+                res.send(JSON.stringify({"status": 200, "error": null, "message": "Data deleted"}));
+            }
 
-    });
+        });
+    }else{
+        Product.deleteAll(req.params.id,function(err, count){
+
+            if(err)
+            {
+                res.send(JSON.stringify({"status": 500, "error": err, "message": "Cannot delete data"}));
+            }
+            else
+            {
+                res.send(JSON.stringify({"status": 200, "error": null, "message": "Data deleted"}));
+            }
+
+        });
+    }
+
+
 });
 router.put('/update/:id',function(req,res,next){
 
-    Members.updateMember(req.params.id,req.body,function(err,rows){
+    Product.updateProduct(req.params.id,req.body,function(err, rows){
 
         if(err)
         {
